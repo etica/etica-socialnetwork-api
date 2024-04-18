@@ -5,7 +5,7 @@ const Address = require("./address.model");
 const UserSchema = new mongoose.Schema({
   userName: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
   },
   mainaddress: {
@@ -22,12 +22,30 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
+  role: {
+    type: String,
+    enum: ["Admin", "User"],
+    default: "User",
+  },
+  commentsstatus: {
+    type: String,
+    enum: ["Open", "Suspended", "Baned"],
+    default: "Open",
+  },
   addresses: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
     },
-  ]
+  ],
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 UserSchema.methods.comparePassword = async function (password) {
