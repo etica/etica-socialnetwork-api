@@ -4,11 +4,12 @@ const User = require("./user.model");
 const AddressSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
   },
   description: {
     type: String,
+    required: false,
     trim: true,
   },
   address: {
@@ -16,6 +17,11 @@ const AddressSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
+  }, // if notifications on, connected platform like etica.io will send notification to alert user about votes reveals 
+  notifications: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

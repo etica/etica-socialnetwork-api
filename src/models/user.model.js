@@ -17,20 +17,10 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
     unique: true,
     lowercase: true,
-  },
-  role: {
-    type: String,
-    enum: ["Admin", "Project Manager", "Team member"],
-    default: "Team member",
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false
   },
   addresses: [
     {
@@ -39,17 +29,6 @@ const UserSchema = new mongoose.Schema({
     },
   ]
 });
-
-UserSchema.pre("save", async function (next) {
-  try {
-    if (this.isModified('password') || this.isNew) {
-      const salt = await bcrypt.genSalt(10);
-      this.password = await bcrypt.hash(this.password, salt)
-    }
-  } catch (error) {
-    next(error)
-  }
-})
 
 UserSchema.methods.comparePassword = async function (password) {
   try {
