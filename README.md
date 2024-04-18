@@ -23,4 +23,4 @@ Contributions to **etica-socialnetwork-api** are welcome! Whether it's bug fixes
 
 **License:**
 
-**etica-socialnetwork-api** is licensed under the MIT License. See the LICENSE file for more details.
+**etica-socialnetwork-api** is open source licensed under the MIT License.
