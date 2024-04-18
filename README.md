@@ -7,7 +7,7 @@
 **Features:**
 - **Comment Handling:** Manage comments on various aspects of Etica, including proposals, reviews, feedback, and discussions.
 - **Discussions:** Facilitate interaction between researchers, voters, and other participants in the Etica ecosystem.
-- **Cross sites interactions:** Enable multiple websites to share comments and reviews on Etica activities.
+- **Cross sites interactions:** Enable multiple websites to share comments and reviews on Etica proposals.
 - **Tips:** Allow users to send ETI and EGAZ tips to other users who made interesting reviews, comments or to researchers.
 
 **Integration with etica-explorer-engine.js:**
