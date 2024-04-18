@@ -1,0 +1,12 @@
+# Use the official MongoDB image as the base image
+FROM mongo:latest
+
+# Optionally, set environment variables if needed
+#ENV MONGO_INITDB_ROOT_USERNAME=admin
+#ENV MONGO_INITDB_ROOT_PASSWORD=secretpwd
+
+# Expose the MongoDB default port
+EXPOSE 27017
+
+# Start MongoDB service automatically when the container starts
+CMD ["mongod"]
