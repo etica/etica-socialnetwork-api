@@ -6,9 +6,9 @@
 
 **Features:**
 - **Comment Handling:** Manage comments on various aspects of Etica, including proposals, reviews, feedback, and discussions.
-- **Interaction:** Facilitate interaction between researchers, voters, and other participants in the Etica ecosystem.
-- **Feedback Management:** Enable users to provide feedback on different Etica activities.
-- **Tips:** Allow users to provide tips and suggestions to improve the Etica platform.
+- **Discussions:** Facilitate interaction between researchers, voters, and other participants in the Etica ecosystem.
+- **Cross sites interactions:** Enable multiple websites to share comments and reviews on Etica activities.
+- **Tips:** Allow users to send ETI and EGAZ tips to other users who made interesting reviews, comments or to researchers.
 
 **Integration with etica-explorer-engine.js:**
 **etica-socialnetwork-api** integrates with **etica-explorer-engine.js** to keep in sync with the Etica mainnet. This ensures that the API reflects the latest data and activities happening on the Etica platform.
