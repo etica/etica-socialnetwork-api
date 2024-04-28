@@ -5,6 +5,7 @@ async function getAllUsers(request, reply) {
     const users = await User.find();
     reply.send(users);
   } catch (error) {
+    console.log('getallUsers error: ', error);
     reply.status(500).send(error);
   }
 }
@@ -35,6 +36,19 @@ async function updateUser(request, reply) {
     reply.status(500).send(error);
   }
 }
+
+async function banUser(request, reply) {
+  try {
+    const user = await User.findByIdAndUpdate(request.params.id, request.body, {
+      new: true,
+    });
+    reply.send(user);
+  } catch (error) {
+    reply.status(500).send(error);
+  }
+}
+
+/*
 async function deleteUser(request, reply) {
   try {
     await User.findByIdAndDelete(request.params.id);
@@ -42,12 +56,12 @@ async function deleteUser(request, reply) {
   } catch (error) {
     reply.status(500).send(error);
   }
-}
+} */
 
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
-  deleteUser,
+  banUser,
 };

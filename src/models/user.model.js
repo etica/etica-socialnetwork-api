@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
   userName: {
     type: String,
     required: false,
+    unique: true,
     trim: true,
   },
   mainaddress: {
@@ -27,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     enum: ["Admin", "User"],
     default: "User",
   },
-  commentsstatus: {
+  comments_status: {
     type: String,
     enum: ["Open", "Suspended", "Baned"],
     default: "Open",

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./user.model");
-const Comment = require("./comment.model");
+const CommentSchema = require("./comment.model");
 
 
 const ProposalSchema = new mongoose.Schema({
@@ -27,29 +27,59 @@ const ProposalSchema = new mongoose.Schema({
   chunkname: {
     type: String,
     required: true
-  },
+  }, // author blockchain address
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: false
-  },
+  }, // ipfs or other content hash
   content: {
     type: String,
     required: true
-  }, // Admin can close comments on proposal
+  },
+  freefield: {
+    type: String,
+    required: false
+  },
   commentsopen: {
     type: Boolean,
     required: true,
     default: false,
   },
-  comments: [CommentSchema] // Embedding comments within Proposal
+  comments: [new mongoose.Schema({
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    proposalHash: {
+      type: String,
+      required: true
+    },
+    parentComment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null
+    },
+    content: {
+      type: String,
+      required: true
+    },
+    upvotes: {
+      type: Number,
+      default: 0
+    },
+    downvotes: {
+      type: Number,
+      default: 0
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+   // replies: [this] 
+  })] // Embedding comments within Proposal
 });
 
 const Proposal = mongoose.model("Proposal", ProposalSchema);
 
-module.exports = Comment;
+module.exports = Proposal;

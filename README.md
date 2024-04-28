@@ -24,3 +24,12 @@ Contributions to **etica-socialnetwork-api** are welcome! Whether it's bug fixes
 **License:**
 
 **etica-socialnetwork-api** is open source licensed under the MIT License.
+
+
+**Local Dev commands Help:**
+
+- Mongo local dev settup help:
+Instructions in mongo-docker/instructions.md
+
+- start api:
+node src/app.js

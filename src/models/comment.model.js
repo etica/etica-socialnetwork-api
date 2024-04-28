@@ -12,6 +12,15 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  topComment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment",
+    default: null
+  },
+  depth: {
+    type: Number,
+    required: true
+  },
   parentComment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Comment",
@@ -32,8 +41,7 @@ const CommentSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  replies: [this] // Reference to nested comments
+  }
 });
 
 const Comment = mongoose.model("Comment", CommentSchema);
