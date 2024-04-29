@@ -133,10 +133,8 @@ async function selectCommentRepliesMaxDepth(_comment, _maxdepth){
   }
 
   try {
-    //console.log('inside selectCommentRepliesMaxDepth for: ', _comment);
+    
     const comments = await Comment.find({ parentComment: _comment._id }).sort({ depth: 1 });
-    //console.log('inside selectCommentRepliesMaxDepth comments: ', comments);
-
     let replies = [];
     for (let reply of comments) {
       const childReplies = await selectCommentRepliesMaxDepth(reply, _maxdepth - 1);
