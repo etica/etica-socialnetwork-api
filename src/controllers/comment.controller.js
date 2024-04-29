@@ -34,6 +34,10 @@ async function createCommentOnProposal(request, reply) {
       if (!parentComment) {
         return reply.status(404).send("Parent comment not found");
       }
+      if (parentComment.proposalHash != newcomment.proposalHash) {
+        return reply.status(500).send("The provided Parent comment doesn't belong to this proposal.");
+      }
+
 
       // Assign depth to the new comment
       newcomment.depth = parentComment.depth + 1;
@@ -133,7 +137,7 @@ async function selectCommentRepliesMaxDepth(_comment, _maxdepth){
   }
 
   try {
-    
+
     const comments = await Comment.find({ parentComment: _comment._id }).sort({ depth: 1 });
     let replies = [];
     for (let reply of comments) {
