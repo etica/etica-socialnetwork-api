@@ -37,7 +37,13 @@ async function createCommentOnProposal(request, reply) {
 
       // Assign depth to the new comment
       newcomment.depth = parentComment.depth + 1;
-      newcomment.topComment = parentComment.topComment;
+      if(parentComment.depth == 0){
+        newcomment.topComment = parentComment._id;
+      }
+      else {
+        newcomment.topComment = parentComment.topComment;
+      }
+
     }
 
     // Create a new comment based on the request body
@@ -62,10 +68,11 @@ async function createCommentOnProposal(request, reply) {
 }
 
 
-async function getProposalComments(request, reply) {
+async function getProposalTopComments(request, reply) {
   try {
+
     // Extract the proposal ID from the request params
-    const { proposalId } = request.params;
+    const { id: proposalId } = request.params;
 
     // Find the proposal by its ID and populate the comments field
     const proposal = await Proposal.findById(proposalId).populate('comments');
@@ -86,6 +93,62 @@ async function getProposalComments(request, reply) {
   }
 }
 
+
+async function getProposalComments(request, reply) {
+  try {
+    
+     // Extract the proposal ID from the request params
+     const { id: proposalId } = request.params;
+
+    // Find the proposal by its ID and populate the comments field
+    // add .lean() so that we can add new properties to comment
+    const proposal = await Proposal.findById(proposalId).populate('comments').lean();
+
+    // If the proposal doesn't exist, return a 404 status
+    if (!proposal) {
+      return reply.status(404).send("Proposal not found");
+    }
+
+    // Extract comments from the proposal
+    var proposalComments = proposal.comments;
+
+    // Iterate through each comment and fetch its replies sequentially
+    for(let onecomment of proposalComments) {
+      onecomment.replies = await selectCommentRepliesMaxDepth(onecomment, 10);
+    }
+    
+    // Send the comments associated with the proposal in the response
+    reply.send(proposalComments);
+  } catch (error) {
+    // If an error occurs, send a 500 status code along with the error message
+    reply.status(500).send(error);
+  }
+}
+
+
+async function selectCommentRepliesMaxDepth(_comment, _maxdepth){
+
+  if (_maxdepth <= 0) {
+    return [];
+  }
+
+  try {
+    //console.log('inside selectCommentRepliesMaxDepth for: ', _comment);
+    const comments = await Comment.find({ parentComment: _comment._id }).sort({ depth: 1 });
+    //console.log('inside selectCommentRepliesMaxDepth comments: ', comments);
+
+    let replies = [];
+    for (let reply of comments) {
+      const childReplies = await selectCommentRepliesMaxDepth(reply, _maxdepth - 1);
+      replies.push({ ...reply.toObject(), replies: childReplies });
+    }
+    console.log('replies: ', replies);
+    return replies;
+  } catch (error) {
+    throw error;
+  }
+
+}
 
 async function getAllComments(request, reply) {
   try {
@@ -138,6 +201,7 @@ async function updateComment(request, reply) {
 
 module.exports = {
   createCommentOnProposal,
+  getProposalTopComments,
   getProposalComments,
   getAllComments,
   updateComment,
