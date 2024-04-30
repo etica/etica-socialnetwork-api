@@ -31,7 +31,7 @@ async function createProposal(request, reply) {
 async function getProposal(request, reply) {
   try {
     // Extract the proposal ID from the request params
-    const { proposalId } = request.params;
+    const { id: proposalId } = request.params;
 
     // Find the proposal by its ID and populate the comments field
     const proposal = await Proposal.findOne({ _id: proposalId }).populate('comments');
