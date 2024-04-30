@@ -1,7 +1,17 @@
 const User = require("../models/user.model");
 const Comment = require("../models/comment.model");
 const Proposal = require("../models/proposal.model");
+const { Web3 } = require('web3');
+const web3validator = require('web3-validator');
 
+const { abi } = require('../../EticaRelease.json');
+
+const CONTRACTADDRESS = process.env.CONTRACT_ADDRESS;
+const MAINRPC = process.env.MAIN_RPC;
+const web3 = new Web3(MAINRPC);
+const contract = new web3.eth.Contract(abi, CONTRACTADDRESS);
+
+const RANDOM_ADDRESS = '0x8d5D6530aD5007590a319cF2ec3ee5bf8A3C35AC';
 
 async function createProposal(request, reply) {
   try {
@@ -10,13 +20,23 @@ async function createProposal(request, reply) {
     const reqproposal = request.body; // Adjust this according to how the proposal ID is passed
 
     if (!reqproposal || !reqproposal.hash) {
-      return reply.status(404).send("Wrong request format, please check API documentation to find expected request format");
+      return reply.status(404).send("Wrong request format. The hash field is missing in request body, please check API documentation to find expected request format");
     }
     
     // Find the proposal by its ID
     const exist_proposal = await Proposal.findOne({ hash: reqproposal.hash });
     if (exist_proposal) {
       return reply.status(404).send("This Proposal is already added to database");
+    }
+    
+    // If proposal hash is not a valid 32bytes hash return false
+    if(!(await checkIsBytes32(reqproposal.hash))){
+      return reply.status(404).send("Proposal is not a bytes32. Make sure to provid a correct proposal hash.");
+    }
+
+    // If proposal hash doesn't exist on blockchain return false
+    if(!(await checkProposalExistence(reqproposal.hash))){
+      return reply.status(404).send("No Proposal found on blockchain with this hash. Check your rpc endpoint or make sure the proposal hash exists on the network of your rpc.");
     }
 
     const proposal = new Proposal(request.body);
@@ -25,6 +45,36 @@ async function createProposal(request, reply) {
   } catch (error) {
     reply.status(500).send(error);
   }
+}
+
+async function checkProposalExistence(_proposalhash){
+
+    let proposal = await contract.methods.proposals(_proposalhash).call();
+    // proposal found:
+    if(proposal[0] > 0){
+      return true;
+    }
+    else {
+      return false;
+    }
+
+}
+
+async function checkIsBytes32(_hash){
+
+  try {
+  let isBytes32 = web3validator.isHexStrict(_hash) && /^0x[0-9a-f]{64}$/i.test(_hash);
+  if(isBytes32){
+    return true;
+  }
+  else{
+    return false;
+  }
+  } catch (error) {
+    console.error('Error checking if hex is strict:', error);
+    return false; // Return false if there's an error
+  }
+
 }
 
 
