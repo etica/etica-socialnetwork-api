@@ -81,10 +81,10 @@ async function checkIsBytes32(_hash){
 async function getProposal(request, reply) {
   try {
     // Extract the proposal ID from the request params
-    const { id: proposalId } = request.params;
+    const { proposalhash: proposalHash } = request.params;
 
     // Find the proposal by its ID and populate the comments field
-    const proposal = await Proposal.findOne({ _id: proposalId }).populate('comments');
+    const proposal = await Proposal.findOne({ hash: proposalHash }).populate('comments');
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
@@ -102,11 +102,12 @@ async function getProposal(request, reply) {
 
 async function getProposalComments(request, reply) {
   try {
+    
     // Extract the proposal ID from the request params
-    const { proposalId } = request.params;
+    const { proposalhash: proposalHash } = request.params;
 
     // Find the proposal by its ID and populate the comments field
-    const proposal = await Proposal.findOne({ _id: proposalId }).populate('comments');
+    const proposal = await Proposal.findOne({ hash: proposalHash }).populate('comments');
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
@@ -119,6 +120,7 @@ async function getProposalComments(request, reply) {
     // Send the comments associated with the proposal in the response
     reply.send(proposalComments);
   } catch (error) {
+    console.log('error:', error);
     // If an error occurs, send a 500 status code along with the error message
     reply.status(500).send(error);
   }

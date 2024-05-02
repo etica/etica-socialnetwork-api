@@ -29,11 +29,17 @@ fastify.register(commentRoutes, { prefix: "/api/v1/comment" });
 const start = async () => {
   try {
     console.log('starting on process.env.PORT', process.env.PORT);
-    await fastify.listen(process.env.PORT || 5000);
-    console.log('-> Server is running on port: ', fastify.server.address().port);
+    //await fastify.listen(process.env.PORT || 5000);
+    fastify.listen({ port: 5000, host: '0.0.0.0' }, (err, address) => {
+      if (err) {
+        fastify.log.error(err)
+        process.exit(1)
+      }
+    });
+    /* console.log('-> Server is running on port: ', fastify.server);
     fastify.log.info(
-      `Server is running on port ${fastify.server.address().port}`
-    );
+      `Server is running on port ${fastify.server}`
+    ); */
   } catch (error) { console.log('error starting fastify: ', error);}
 };
 

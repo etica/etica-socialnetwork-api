@@ -3,9 +3,9 @@ const { basicAuth } = require("../middlewares/auth");
 
 async function routes(fastify, options) {
   fastify.get("/proposals", proposalController.getProposals);
-  fastify.get("/:id", proposalController.getProposal);
+  fastify.get("/:proposalhash", proposalController.getProposal);
   fastify.get("/withcomments/:id", proposalController.getProposalComments);
-  fastify.get("/comments/:id", proposalController.getProposalComments);
+  fastify.get("/comments/:proposalhash", proposalController.getProposalComments);
   fastify.post("/create", proposalController.createProposal);
 }
 

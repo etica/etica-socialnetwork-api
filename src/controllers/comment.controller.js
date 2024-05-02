@@ -8,10 +8,10 @@ const mongoose = require("mongoose");
 async function createCommentOnProposal(request, reply) {
   try {
     // Extract proposal ID from the request body or params, assuming it's passed in the request
-    const { proposalId } = request.body; // Adjust this according to how the proposal ID is passed
+    const { proposalHash } = request.body; // Adjust this according to how the proposal ID is passed
     
     // Find the proposal by its ID
-    let proposal = await Proposal.findById(proposalId);
+    let proposal = await Proposal.findOne({ hash: proposalHash });
     
     if (!proposal) {
       return reply.status(404).send("Proposal not found");
@@ -101,12 +101,12 @@ async function getProposalTopComments(request, reply) {
 async function getProposalComments(request, reply) {
   try {
     
-     // Extract the proposal ID from the request params
-     const { id: proposalId } = request.params;
+     // Extract the proposal hash from the request params
+     const { proposalhash: proposalHash } = request.params;
 
     // Find the proposal by its ID and populate the comments field
     // add .lean() so that we can add new properties to comment
-    const proposal = await Proposal.findById(proposalId).populate('comments').lean();
+    const proposal = await Proposal.findOne({ hash: proposalHash }).populate('comments').lean();
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
@@ -119,6 +119,7 @@ async function getProposalComments(request, reply) {
     // Iterate through each comment and fetch its replies sequentially
     for(let onecomment of proposalComments) {
       onecomment.replies = await selectCommentRepliesMaxDepth(onecomment, 10);
+      onecomment.user = await User.findOne({ _id: onecomment.user });
     }
     
     // Send the comments associated with the proposal in the response
@@ -141,10 +142,11 @@ async function selectCommentRepliesMaxDepth(_comment, _maxdepth){
     const comments = await Comment.find({ parentComment: _comment._id }).sort({ depth: 1 });
     let replies = [];
     for (let reply of comments) {
+      reply.user = await User.findOne({ _id: reply.user });
       const childReplies = await selectCommentRepliesMaxDepth(reply, _maxdepth - 1);
       replies.push({ ...reply.toObject(), replies: childReplies });
     }
-    console.log('replies: ', replies);
+
     return replies;
   } catch (error) {
     throw error;
