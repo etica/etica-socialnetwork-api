@@ -277,7 +277,7 @@ async function upvoteOrDownvote(request, reply) {
         } else if (type == ReactionType.DOWNVOTE) {
           comment.downvotes += 1;
         }
-        console.log('--- > comment is: ', comment);
+        
         await _updatecomment(comment);
 
     } else {
@@ -287,26 +287,26 @@ async function upvoteOrDownvote(request, reply) {
         await reaction.save();
         comment.downvotes += 1;
         comment.upvotes -= 1;
-        await comment.save();
+        await _updatecomment(comment);
       } else if (reaction.type == ReactionType.DOWNVOTE && type == ReactionType.UPVOTE) {
         reaction.type = ReactionType.UPVOTE;
         await reaction.save();
         comment.upvotes += 1;
         comment.downvotes -= 1;
-        await comment.save();
+        await _updatecomment(comment);
       } else if (reaction.type == ReactionType.UPVOTE && type == ReactionType.UPVOTE) {
         await reaction.deleteOne();
         // should be unecessary to check upvotes >= 1 but added it anyway:
         if(comment.upvotes >= 1){
           comment.upvotes -= 1;
-          await comment.save();
+          await _updatecomment(comment);
         }
        
       } else if (reaction.type == ReactionType.DOWNVOTE && type == ReactionType.DOWNVOTE) {
         await reaction.deleteOne();
         if(comment.downvotes >= 1){
         comment.downvotes -= 1;
-        await comment.save();
+        await _updatecomment(comment);
         }
           
       }
