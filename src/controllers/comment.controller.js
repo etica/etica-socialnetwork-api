@@ -1,9 +1,15 @@
 const User = require("../models/user.model");
 const Comment = require("../models/comment.model");
 const Proposal = require("../models/proposal.model");
+const Reaction = require("../models/reaction.model");
 const { DateTime } = require('luxon');
 const mongoose = require("mongoose");
 
+// Enum for reaction types to comments
+const ReactionType = {
+  UPVOTE: 'upvote',
+  DOWNVOTE: 'downvote'
+};
 
 async function createCommentOnProposal(request, reply) {
   try {
@@ -182,6 +188,9 @@ async function updateComment(request, reply) {
     
     // Find the comment by its ID
     let comment = await Comment.findById(commentId);
+
+    // check comment belongs to user
+
     
     // If the comment doesn't exist, return a 404 status
     if (!comment) {
@@ -203,10 +212,121 @@ async function updateComment(request, reply) {
 }
 
 
+async function _updatecomment(comment) {
+  try {
+
+    // if comment is topLevel comment (comments without parent comment), also update Proposal.comment
+    if(!comment.parentComment){
+
+      var proposal = await Proposal.findOne({ hash: comment.proposalHash });
+
+      // Update the Proposal's comments array if necessary
+      const index = proposal.comments.findIndex(c => c._id.equals(comment._id));
+      if (index !== -1) {
+        proposal.comments[index] = comment; // Update content or any other properties you want to change
+      }
+
+      // Save the updated Proposal
+      await proposal.save();
+
+    }
+
+    comment.save();
+
+
+  } catch (error) {
+    // If an error occurs, send a 500 status code along with the error message
+    reply.status(500).send(error);
+  }
+}
+
+
+async function upvoteOrDownvote(request, reply) {
+  try {
+    // Extract the data from the request body
+    const { commentId, userId, type } = request.body;
+
+    // Find the logged-in user
+    const user = await User.findById(userId);
+
+     // Find the comment by its ID
+    let comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      return reply.status(404).send("Comment not found");
+    }
+
+    if ((type !== ReactionType.UPVOTE && type !== ReactionType.DOWNVOTE)) {
+      return reply.status(400).send("Reaction type not supported. Please chose upvote or downvote type");
+    }
+    
+
+    // Find the reaction by user ID and post ID
+    let reaction = await Reaction.findOne({ comment_id: comment._id, user_id: userId });
+
+    // If no reaction exists yet
+    if (!reaction) {
+
+      const now = DateTime.utc();
+      // Create a new reaction
+      reaction = new Reaction({ user_id: user._id, comment_id: comment._id, type: type, createdAt: now.toJSDate()});
+      await reaction.save();
+
+        if (type == ReactionType.UPVOTE) {
+          comment.upvotes += 1;
+        } else if (type == ReactionType.DOWNVOTE) {
+          comment.downvotes += 1;
+        }
+        console.log('--- > comment is: ', comment);
+        await _updatecomment(comment);
+
+    } else {
+      // If reaction already exists, update it
+      if (reaction.type == ReactionType.UPVOTE && type == ReactionType.DOWNVOTE) {
+        reaction.type = ReactionType.DOWNVOTE;
+        await reaction.save();
+        comment.downvotes += 1;
+        comment.upvotes -= 1;
+        await comment.save();
+      } else if (reaction.type == ReactionType.DOWNVOTE && type == ReactionType.UPVOTE) {
+        reaction.type = ReactionType.UPVOTE;
+        await reaction.save();
+        comment.upvotes += 1;
+        comment.downvotes -= 1;
+        await comment.save();
+      } else if (reaction.type == ReactionType.UPVOTE && type == ReactionType.UPVOTE) {
+        await reaction.deleteOne();
+        // should be unecessary to check upvotes >= 1 but added it anyway:
+        if(comment.upvotes >= 1){
+          comment.upvotes -= 1;
+          await comment.save();
+        }
+       
+      } else if (reaction.type == ReactionType.DOWNVOTE && type == ReactionType.DOWNVOTE) {
+        await reaction.deleteOne();
+        if(comment.downvotes >= 1){
+        comment.downvotes -= 1;
+        await comment.save();
+        }
+          
+      }
+    }
+
+    // Return the reaction
+    return reply.send(reaction);
+  } catch (error) {
+    // Return error response for any exceptions
+    console.error(error);
+    return reply.status(500).send({ error: 'Internal server error' });
+  }
+}
+
+
 module.exports = {
   createCommentOnProposal,
   getProposalTopComments,
   getProposalComments,
   getAllComments,
   updateComment,
+  upvoteOrDownvote,
 };
