@@ -155,7 +155,6 @@ if (decodedToken) {
         const userChallenge = await User.findOne({ mainaddress: authAddress });
         // Validate the authChallenge
         const challengeMessage = userChallenge.challenge;
-        console.log('challengeMessage is: ', challengeMessage);
 
         if (authChallenge !== challengeMessage) {
           const errorResponse = {
