@@ -10,7 +10,8 @@ const ProposalSchema = new mongoose.Schema({
   },
   hash: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   diseasehash: {
     type: String,

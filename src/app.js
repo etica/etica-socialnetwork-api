@@ -5,6 +5,7 @@ require("dotenv").config();
 const { basicAuth } = require("./middlewares/auth")
 
 // Import my routes
+const authenticationRoutes = require("./routes/authentication.routes");
 const userRoutes = require("./routes/user.routes");
 const proposalRoutes = require("./routes/proposal.routes");
 const commentRoutes = require("./routes/comment.routes");
@@ -19,6 +20,7 @@ mongoose
   .catch((e) => console.log("Error connecting to database", e));
 
 // start my server
+fastify.register(authenticationRoutes, { prefix: "/api/v1/auth" });
 fastify.register(userRoutes, { prefix: "/api/v1/user" });
 fastify.register(proposalRoutes, { prefix: "/api/v1/proposal" });
 fastify.register(commentRoutes, { prefix: "/api/v1/comment" });

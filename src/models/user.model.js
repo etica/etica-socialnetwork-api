@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
     unique: true,
+    sparse: true,
     trim: true,
   },
   mainaddress: {
@@ -16,11 +17,18 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
+  challenge: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+  },
   email: {
     type: String,
     required: false,
-    trim: true,
     unique: true,
+    sparse: true, // Ensures uniqueness only for non-null values
+    trim: true,
     lowercase: true,
   },
   role: {
