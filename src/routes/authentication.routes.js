@@ -2,6 +2,7 @@ const authenticationController = require("../controllers/authentication.controll
 
 async function routes(fastify, options) {
   fastify.post("/register", authenticationController.register);
+  fastify.post("/login", authenticationController.login);
 }
 
 module.exports = routes;
