@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'your_secret_key'; // Replace this with your secret key
 const SignatureService = require('../services/SignatureService');
 const ethUtil = require ('ethereumjs-util');
 const web3validator = require('web3-validator');
@@ -8,46 +7,40 @@ const web3 = new Web3();
 const { DateTime } = require('luxon');
 
 const User = require("../models/user.model");
+require('dotenv').config();
+const secretKey = process.env.SECRETKEY;
 
 
-// Function to generate a JWT token with an expiration time
-function generateToken(payload) {
-  // Set expiration time to 1 hour from now (in seconds)
-  const expiresIn = 3600; // 1 hour
-  return jwt.sign(payload, secretKey, { expiresIn });
-}
+    // Function to generate a JWT token with an expiration time
+    function generateToken(payload) {
+      // Set expiration time to 1 hour from now (in seconds)
+      const expiresIn = 3600; // 1 hour
+      return jwt.sign(payload, secretKey, { expiresIn });
+    }
 
-// Example payload (user information)
-const user = {
-  id: 123,
-  username: 'example_user'
-};
+    // Get Challenge to Register
+    async function getChallengeGeneral(request, reply){
 
-// Generate a JWT token with the user payload
-const token = generateToken(user);
-console.log('Generated JWT token:', token);
+      try {
 
-// Function to verify and decode a JWT token
-function verifyToken(token) {
-  try {
-    // Verify the token and decode its payload
-    const decoded = jwt.verify(token, secretKey);
-    console.log('Decoded JWT payload:', decoded);
-    return decoded;
-  } catch (error) {
-    // Handle token verification errors (e.g., expired token)
-    console.error('Token verification failed:', error.message);
-    return null;
+        // Validate the authChallenge
+        const challengeMessage = '0x27fe5fcaeacf7df0889a53a0ef6e59117351604cc9c792ecd768f6b4e2dab64b';
+
+        const successResponse = {
+          error: [],
+          result: challengeMessage
+        };
+        return reply.send(successResponse);
+      } catch (error) {
+        console.error('Error getChallengeGeneral:', error);
+        const errorResponse = {
+          error: ['Error getChallengeGeneral. Please try again later.']
+        };
+        return reply.status(500).send(errorResponse);
+      }
+
   }
-}
 
-// Verify and decode the generated token
-const decodedToken = verifyToken(token);
-if (decodedToken) {
-  // Token is valid, perform further actions based on the decoded payload
-  console.log('User ID:', decodedToken.id);
-  console.log('Username:', decodedToken.username);
-}
 
 
   async function register(request, reply){
@@ -55,7 +48,7 @@ if (decodedToken) {
     try {
 
       // Check if required data is present in the request
-      const { authAddress, authSignature, authChallenge } = request.body;
+      const { authAddress, authSignature, authChallenge, username } = request.body;
       if (!authAddress || !authSignature || !authChallenge) {
         const errorResponse = {
           error: ['Required data is missing in the request. Please check API documentation to pass data correctly.']
@@ -96,6 +89,7 @@ if (decodedToken) {
 
       // Create a new user record
       const user = new User({
+        username: username || null, // Set username to null if not provided
         mainaddress: authAddress,
         challenge: signatureService.generateRandomHex(),
         createdAt: now.toJSDate()
@@ -117,8 +111,41 @@ if (decodedToken) {
       return reply.status(500).send(errorResponse);
     }
 
-
   }
+
+  // Get Challenge to Login
+  async function getChallengeUser(request, reply){
+
+    try {
+  
+      // Extract the user ID from the request params
+    const { userAddress: userAddress } = request.params;
+
+    // Find the proposal by its ID and populate the comments field
+    const user = await User.findOne({ mainaddress: userAddress });
+
+    // If the user doesn't exist, return a 404 status
+    if (!user) {
+      return reply.status(404).send("User not found");
+    }
+  
+      const challenge = user.challenge;
+      const successResponse = {
+        error: [],
+        result: challenge
+      };
+      return reply.send(successResponse);
+    } catch (error) {
+      console.error('Error getChallengeUser:', error);
+      const errorResponse = {
+        error: ['Error getChallengeUser. Please try again later.']
+      };
+      return reply.status(500).send(errorResponse);
+    }
+  
+  
+  }
+
 
   async function login(request, reply){
 
@@ -292,4 +319,6 @@ async function verifyUserSignature(expectedAddress, signedMessage, originalMessa
   module.exports = {
     register,
     login,
+    getChallengeGeneral,
+    getChallengeUser
   };

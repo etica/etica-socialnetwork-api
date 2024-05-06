@@ -2,8 +2,6 @@ const fastify = require("fastify")({ logger: false });
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const { basicAuth } = require("./middlewares/auth")
-
 // Import my routes
 const authenticationRoutes = require("./routes/authentication.routes");
 const userRoutes = require("./routes/user.routes");

@@ -1,18 +1,45 @@
+const jwt = require('jsonwebtoken');
+const SignatureService = require('../services/SignatureService');
+const ethUtil = require ('ethereumjs-util');
+const web3validator = require('web3-validator');
+const { Web3 } = require('web3');
+const web3 = new Web3();
+const { DateTime } = require('luxon');
+
 const User = require('../models/user.model');
 
-require('dotenv').config()
+require('dotenv').config();
+const secretKey = process.env.SECRETKEY;
 
 async function apiKeyAuth(request, reply) {
-	if (['GET', 'HEAD'].includes(request.method)) {
-		return;
-	}
-	const apiKey = request.headers['x-api-key'];
-	const knownKey = process.env.APIKEY
 
-	if (!apiKey || apiKey !== knownKey) {
+	const apiKey = request.headers['x-api-key'];
+
+	 // Verify and decode the generated token
+	 const decodedToken = verifyToken(apiKey);
+	 if (decodedToken) {
+		request.user = decodedToken;
+		return;
+	 }
+	 else{
 		return reply.code(401).send({ error: "Unauthorized" })
-	}
+	 }
+	
 }
+
+// Function to verify and decode a JWT token
+function verifyToken(token) {
+	try {
+	  // Verify the token and decode its payload
+	  const decoded = jwt.verify(token, secretKey);
+	  return decoded;
+	} catch (error) {
+	  // Handle token verification errors (e.g., expired token)
+	  console.error('Token verification failed:', error.message);
+	  return null;
+	}
+  }
+  
 
 async function basicAuth(request, reply) {
 	const authHeader = request.headers['authorization'];

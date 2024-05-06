@@ -11,6 +11,8 @@ const ReactionType = {
   DOWNVOTE: 'downvote'
 };
 
+
+// middleware: auth.apiKeyAuth()
 async function createCommentOnProposal(request, reply) {
   try {
     // Extract proposal ID from the request body or params, assuming it's passed in the request
@@ -24,13 +26,13 @@ async function createCommentOnProposal(request, reply) {
     }
 
     var newcomment = request.body.comment;
-    
+    //  request.user contains user thanks to auth.apiKeyAuth() middleware
+    newcomment.user = request.user._id;
     newcomment.proposalHash = proposal.hash;
     // Get the current date and time in UTC using Luxon
     const now = DateTime.utc();
     // Assign the formatted UTC date to the createdAt field of newcomment
     newcomment.createdAt = now.toJSDate();
-
     // Ensure that the new comment has a unique identifier
     newcomment._id = new mongoose.Types.ObjectId();
     newcomment.depth = 0;
@@ -240,14 +242,14 @@ async function _updatecomment(comment) {
   }
 }
 
-
+// middleware: auth.apiKeyAuth()
 async function upvoteOrDownvote(request, reply) {
   try {
     // Extract the data from the request body
     const { commentId, userId, type } = request.body;
 
-    // Find the logged-in user
-    const user = await User.findById(userId);
+    //  request.user contains user thanks to auth.apiKeyAuth() middleware
+    const user = request.user;
 
      // Find the comment by its ID
     let comment = await Comment.findById(commentId);
@@ -277,7 +279,7 @@ async function upvoteOrDownvote(request, reply) {
         } else if (type == ReactionType.DOWNVOTE) {
           comment.downvotes += 1;
         }
-        
+
         await _updatecomment(comment);
 
     } else {

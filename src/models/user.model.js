@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const Address = require("./address.model");
 
 const UserSchema = new mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     required: false,
     unique: true,
