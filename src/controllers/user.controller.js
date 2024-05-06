@@ -58,10 +58,31 @@ async function deleteUser(request, reply) {
   }
 } */
 
+// AUTH USER
+
+async function getAuthUser(request, reply) {
+  try {
+
+    //request.user contains user thanks to auth.apiKeyAuth() middleware
+    const user = request.user;
+    const successResponse = {
+      error: [],
+      result: user
+    };
+    return reply.send(successResponse);
+
+  } catch (error) {
+    reply.status(500).send(error);
+  }
+}
+
+// AUTH USER
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   banUser,
+  getAuthUser,
 };

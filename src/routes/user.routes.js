@@ -6,6 +6,8 @@ async function routes(fastify, options) {
   fastify.get("/:id", userController.getUserById);
   fastify.post("/create", userController.createUser);
   fastify.post("/ban/:id", userController.banUser);
+
+  fastify.get("/authuser", { preHandler: apiKeyAuth }, userController.getAuthUser);
   fastify.put("/update/:id", { preHandler: apiKeyAuth }, userController.updateUser);
 }
 

@@ -15,15 +15,22 @@ async function apiKeyAuth(request, reply) {
 
 	const apiKey = request.headers['x-api-key'];
 
+	try {
+
 	 // Verify and decode the generated token
 	 const decodedToken = verifyToken(apiKey);
 	 if (decodedToken) {
 		request.user = decodedToken;
 		return;
-	 }
-	 else{
-		return reply.code(401).send({ error: "Unauthorized" })
-	 }
+	 } 
+	 else {
+		throw new Error("Unauthorized");
+	}
+    
+    } catch (error) {
+	console.error('Error in apiKeyAuth middleware:', error.message);
+	return reply.code(401).send({ error: error.message });
+    }
 	
 }
 
@@ -34,9 +41,8 @@ function verifyToken(token) {
 	  const decoded = jwt.verify(token, secretKey);
 	  return decoded;
 	} catch (error) {
-	  // Handle token verification errors (e.g., expired token)
-	  console.error('Token verification failed:', error.message);
-	  return null;
+		console.error('Token verification failed:', error.message);
+		throw new Error("Unauthorized: " + error.message);
 	}
   }
   
