@@ -274,7 +274,7 @@ async function upvoteOrDownvote(request, reply) {
 
       const now = DateTime.utc();
       // Create a new reaction
-      reaction = new Reaction({ user_id: user._id, comment_id: comment._id, type: type, createdAt: now.toJSDate()});
+      reaction = new Reaction({ user_id: user._id, comment_id: comment._id, proposalHash: comment.proposalHash, type: type, createdAt: now.toJSDate()});
       await reaction.save();
 
         if (type == ReactionType.UPVOTE) {

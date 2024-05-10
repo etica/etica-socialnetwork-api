@@ -12,6 +12,11 @@ const ReactionSchema = new mongoose.Schema({
     ref: "Comment",
     default: null
   },
+  proposalHash: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Proposal",
+    default: null
+  },
   type: {
     type: String,
     enum: ["upvote", "downvote"],
