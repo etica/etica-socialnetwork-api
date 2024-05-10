@@ -60,6 +60,8 @@ async function createCommentOnProposal(request, reply) {
 
     // Create a new comment based on the request body
     const comment = new Comment(newcomment);
+
+    comment.user = await User.findOne({ _id: comment.user });
     const result = await comment.save();
     reply.send(result);
 
@@ -214,6 +216,7 @@ async function updateComment(request, reply) {
 }
 
 
+// Updates comment in Proposal.comment before updating comment
 async function _updatecomment(comment) {
   try {
 
@@ -233,7 +236,7 @@ async function _updatecomment(comment) {
 
     }
 
-    comment.save();
+      await comment.save();
 
 
   } catch (error) {
@@ -246,7 +249,7 @@ async function _updatecomment(comment) {
 async function upvoteOrDownvote(request, reply) {
   try {
     // Extract the data from the request body
-    const { commentId, userId, type } = request.body;
+    const { commentId, type } = request.body;
 
     //  request.user contains user thanks to auth.apiKeyAuth() middleware
     const user = request.user;
@@ -264,7 +267,7 @@ async function upvoteOrDownvote(request, reply) {
     
 
     // Find the reaction by user ID and post ID
-    let reaction = await Reaction.findOne({ comment_id: comment._id, user_id: userId });
+    let reaction = await Reaction.findOne({ comment_id: comment._id, user_id: user._id });
 
     // If no reaction exists yet
     if (!reaction) {
@@ -314,8 +317,15 @@ async function upvoteOrDownvote(request, reply) {
       }
     }
 
-    // Return the reaction
-    return reply.send(reaction);
+    const resp = {};
+    resp.reaction = reaction;
+    resp.comment = comment;
+    const successResponse = {
+      error: [],
+      result: resp
+    };
+    return reply.send(successResponse);
+
   } catch (error) {
     // Return error response for any exceptions
     console.error(error);
