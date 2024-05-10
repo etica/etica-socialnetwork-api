@@ -9,6 +9,7 @@ const { DateTime } = require('luxon');
 const User = require("../models/user.model");
 require('dotenv').config();
 const secretKey = process.env.SECRETKEY;
+const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
 
 
     // Function to generate a JWT token with an expiration time
@@ -23,12 +24,9 @@ const secretKey = process.env.SECRETKEY;
 
       try {
 
-        // Validate the authChallenge
-        const challengeMessage = '0x27fe5fcaeacf7df0889a53a0ef6e59117351604cc9c792ecd768f6b4e2dab64b';
-
         const successResponse = {
           error: [],
-          result: challengeMessage
+          result: REGISTERCHALLENGE
         };
         return reply.send(successResponse);
       } catch (error) {
@@ -57,8 +55,7 @@ const secretKey = process.env.SECRETKEY;
       }
 
       // Validate the authChallenge
-      const challengeMessage = '0x27fe5fcaeacf7df0889a53a0ef6e59117351604cc9c792ecd768f6b4e2dab64b';
-      if (authChallenge !== challengeMessage) {
+      if (authChallenge !== REGISTERCHALLENGE) {
         const errorResponse = {
           error: ['Wrong AuthChallenge. Please check API documentation to pass data correctly. Use route /auth/challenge to get auth Challenge.']
         };
