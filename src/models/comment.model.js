@@ -10,7 +10,9 @@ const CommentSchema = new mongoose.Schema({
   },
   proposalHash: {
     type: String,
-    required: true
+    required: true,
+    index: true,
+    sparse: true
   },
   topComment: {
     type: mongoose.Schema.Types.ObjectId,

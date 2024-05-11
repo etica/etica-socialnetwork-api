@@ -13,9 +13,11 @@ const ReactionSchema = new mongoose.Schema({
     default: null
   },
   proposalHash: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Proposal",
-    default: null
+    default: null,
+    index: true,
+    sparse: true
   },
   type: {
     type: String,

@@ -152,6 +152,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       const { authAddress, authSignature, authChallenge } = request.body;
       if (!authAddress || !authSignature || !authChallenge) {
         const errorResponse = {
+          success: false,
           error: ['Required data is missing in the request. Please check API documentation to pass data correctly.']
         };
         return reply.status(400).send(errorResponse);
@@ -160,6 +161,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       // Validate the authAddress format
       if (!web3validator.isAddress(authAddress)) {
         const errorResponse = {
+          success: false,
           error: ['Invalid authAddress. Please check address format.']
         };
         return reply.status(400).send(errorResponse);
@@ -170,6 +172,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       const userAuthenticated = await verifyUserSignature(authAddress, authSignature, authChallenge, reply);
       if (!userAuthenticated || !userAuthenticated._id) {
         const errorResponse = {
+          success: false,
           error: ['Failed to login user with this address and this signature.']
         };
         return reply.status(400).send(errorResponse);
@@ -182,6 +185,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
 
         if (authChallenge !== challengeMessage) {
           const errorResponse = {
+            success: false,
             error: ['Wrong AuthChallenge. Please check API documentation to pass data correctly. Use route /auth/challenge to get auth Challenge.']
           };
           return reply.status(400).send(errorResponse);
@@ -203,13 +207,14 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       await userAuthenticated.save();
 
       const successResponse = {
-        error: [],
+        success: true,
         result: token
       };
       return reply.send(successResponse);
     } catch (error) {
       console.error('Error loging user:', error);
       const errorResponse = {
+        success: false,
         error: ['Login failed. Please try again later.']
       };
       return reply.status(500).send(errorResponse);

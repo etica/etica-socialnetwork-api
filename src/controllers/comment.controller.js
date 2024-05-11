@@ -58,11 +58,20 @@ async function createCommentOnProposal(request, reply) {
 
     }
 
+    // for default reaction of author comment:
+    newcomment.upvotes = 1;
     // Create a new comment based on the request body
     const comment = new Comment(newcomment);
 
     comment.user = await User.findOne({ _id: comment.user });
     const result = await comment.save();
+
+
+      // creates default reaction of author comment:
+      // Create a new reaction
+      const reaction = new Reaction({ user_id: comment.user, comment_id: result._id, proposalHash: comment.proposalHash, type: ReactionType.UPVOTE, createdAt: now.toJSDate()});
+      await reaction.save();
+
     reply.send(result);
 
     if (!comment.parentComment) {
@@ -321,7 +330,7 @@ async function upvoteOrDownvote(request, reply) {
     resp.reaction = reaction;
     resp.comment = comment;
     const successResponse = {
-      error: [],
+      success: true,
       result: resp
     };
     return reply.send(successResponse);
@@ -329,7 +338,10 @@ async function upvoteOrDownvote(request, reply) {
   } catch (error) {
     // Return error response for any exceptions
     console.error(error);
-    return reply.status(500).send({ error: 'Internal server error' });
+    return reply.status(500).send({ 
+      success: false,
+      error: ['Internal server error']
+     });
   }
 }
 

@@ -28,7 +28,7 @@ async function apiKeyAuth(request, reply) {
 	}
     
     } catch (error) {
-	console.error('Error in apiKeyAuth middleware:', error.message);
+	//console.error('Error in apiKeyAuth middleware:', error.message);
 	return reply.code(401).send({ error: error.message });
     }
 	
@@ -41,7 +41,7 @@ function verifyToken(token) {
 	  const decoded = jwt.verify(token, secretKey);
 	  return decoded;
 	} catch (error) {
-		console.error('Token verification failed:', error.message);
+		//console.error('Token verification failed:', error.message);
 		throw new Error("Unauthorized: " + error.message);
 	}
   }

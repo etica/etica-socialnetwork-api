@@ -11,7 +11,8 @@ const ProposalSchema = new mongoose.Schema({
   hash: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   diseasehash: {
     type: String,
@@ -54,7 +55,9 @@ const ProposalSchema = new mongoose.Schema({
     },
     proposalHash: {
       type: String,
-      required: true
+      required: true,
+      index: true,
+      sparse: true
     },
     parentComment: {
       type: mongoose.Schema.Types.ObjectId,
