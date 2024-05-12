@@ -49,6 +49,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       const { authAddress, authSignature, authChallenge, username } = request.body;
       if (!authAddress || !authSignature || !authChallenge) {
         const errorResponse = {
+          success: false,
           error: ['Required data is missing in the request. Please check API documentation to pass data correctly.']
         };
         return reply.status(400).send(errorResponse);
@@ -57,6 +58,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       // Validate the authChallenge
       if (authChallenge !== REGISTERCHALLENGE) {
         const errorResponse = {
+          success: false,
           error: ['Wrong AuthChallenge. Please check API documentation to pass data correctly. Use route /auth/challenge to get auth Challenge.']
         };
         return reply.status(400).send(errorResponse);
@@ -65,6 +67,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       // Validate the authAddress format
       if (!web3validator.isAddress(authAddress)) {
         const errorResponse = {
+          success: false,
           error: ['Invalid authAddress. Please check address format.']
         };
         return reply.status(400).send(errorResponse);
@@ -74,6 +77,7 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       const signatureNewUser = await verifySignatureForNewUser(authAddress, authSignature, authChallenge, reply);
       if (signatureNewUser !== 'SUCCESS') {
         const errorResponse = {
+          success: false,
           error: ['Failed to register new user with this address and this signature.']
         };
         return reply.status(400).send(errorResponse);
@@ -96,13 +100,14 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
       await user.save();
 
       const successResponse = {
-        error: [],
+        success: true,
         result: user
       };
       return reply.send(successResponse);
     } catch (error) {
       console.error('Error registering user:', error);
       const errorResponse = {
+        success: false,
         error: ['Registration failed. Please try again later.']
       };
       return reply.status(500).send(errorResponse);
@@ -123,18 +128,22 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
 
     // If the user doesn't exist, return a 404 status
     if (!user) {
-      return reply.status(404).send("User not found");
-    }
+      const errorResponse = {
+        success: false,
+        error: ["User not found"]
+      };
+      return reply.status(404).send(errorResponse);
+      }
   
       const challenge = user.challenge;
       const successResponse = {
-        error: [],
+        success: true,
         result: challenge
       };
       return reply.send(successResponse);
     } catch (error) {
-      console.error('Error getChallengeUser:', error);
       const errorResponse = {
+        success: false,
         error: ['Error getChallengeUser. Please try again later.']
       };
       return reply.status(500).send(errorResponse);

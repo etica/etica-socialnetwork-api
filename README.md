@@ -37,3 +37,15 @@ Instructions in mongo-docker/instructions.md
 node src/app.js
 
 - start script to keep synced with blockchain new proposals
+
+
+**Prod commands Help:**
+- Install mongo:
+https://cloudinfrastructureservices.co.uk/install-mongodb-on-ubuntu-community-edition/
+
+create database:
+> mongo
+> db.createCollection("eticasocialsdb")
+> use eticasocialsdb
+> db.initialCollection.insertOne({ exampleField: "exampleValue" })
+> show databases
