@@ -89,12 +89,18 @@ const REGISTERCHALLENGE = process.env.REGISTERCHALLENGE;
        const now = DateTime.utc();
 
       // Create a new user record
-      const user = new User({
-        username: username || null, // Set username to null if not provided
+      const userData = {
         mainaddress: authAddress,
         challenge: signatureService.generateRandomHex(),
         createdAt: now.toJSDate()
-      });
+      };
+      
+      // Check if username is provided, and if so, include it in userData
+      if (username) {
+        userData.username = username;
+      }
+
+      const user = new User(userData);
 
       // Save the user record to the database
       await user.save();
