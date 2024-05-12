@@ -105,13 +105,18 @@ async function getProposalReactions(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Usefull to show upvotes/downvotes in bold if user made an upvote or downvote
     var proposalReactions = await Reaction.find({ user_id: request.user._id, proposalHash: proposal.hash });
 
     const successResponse = {
+      success: true,
       result: proposalReactions
     };
     return reply.send(successResponse);
@@ -119,6 +124,7 @@ async function getProposalReactions(request, reply) {
   } catch (error) {
     // If an error occurs, send a 500 status code along with the error message
     const errorResponse = {
+      success: false,
       error: error
     };
     reply.status(500).send(errorResponse);

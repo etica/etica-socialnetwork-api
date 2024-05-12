@@ -29,6 +29,12 @@ class SignatureService {
     return token;
   }
 
+  generateSecretKey() {
+    // Generate a longer secret key (128 characters) by generating 64 bytes
+    const token = crypto.randomBytes(64).toString('hex'); // Generate a 64-character API secret
+    return token;
+  }
+
 
   generateRandomHex() {
     const token = '0x' + crypto.randomBytes(32).toString('hex'); // Generate a 64-character API secret

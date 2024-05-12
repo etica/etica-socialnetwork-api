@@ -8,11 +8,19 @@ const ProposalSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  description: {
+    type: String,
+    required: false
+  },
   hash: {
     type: String,
     required: true,
     unique: true,
     index: true
+  },
+  index: {
+    type: Number,
+    required: true
   },
   diseasehash: {
     type: String,
@@ -23,18 +31,19 @@ const ProposalSchema = new mongoose.Schema({
     required: true
   },
   chunkid: {
-    type: String,
+    type: Number,
     required: true
   },
   chunkname: {
     type: String,
-    required: true
-  }, // author blockchain address
-  author: {
+    required: false,
+    default: null
+  }, // proposer blockchain address
+  proposer: {
     type: String,
     required: true
   }, // ipfs or other content hash
-  content: {
+  raw_release_hash: {
     type: String,
     required: true
   },

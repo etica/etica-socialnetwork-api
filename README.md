@@ -31,5 +31,9 @@ Contributions to **etica-socialnetwork-api** are welcome! Whether it's bug fixes
 - Mongo local dev settup help:
 Instructions in mongo-docker/instructions.md
 
+- Run generate-env-keys.js to generate .env SECRETKEY and REGISTERCHALLENGE
+
 - start api:
 node src/app.js
+
+- start script to keep synced with blockchain new proposals

@@ -88,21 +88,29 @@ async function getProposal(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Send the comments associated with the proposal in the response
     reply.send(proposal);
   } catch (error) {
     // If an error occurs, send a 500 status code along with the error message
-    reply.status(500).send(error);
+    const errorResponse = {
+      success: false,
+      error: error
+    };
+    return reply.status(500).send(errorResponse);
   }
 }
 
 
 async function getProposalComments(request, reply) {
   try {
-    
+
     // Extract the proposal ID from the request params
     const { proposalhash: proposalHash } = request.params;
 
@@ -111,7 +119,11 @@ async function getProposalComments(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Extract comments from the proposal
@@ -122,7 +134,11 @@ async function getProposalComments(request, reply) {
   } catch (error) {
     console.log('error:', error);
     // If an error occurs, send a 500 status code along with the error message
-    reply.status(500).send(error);
+    const errorResponse = {
+      success: false,
+      error: error
+    };
+    return reply.status(500).send(errorResponse);
   }
 }
 
@@ -137,14 +153,22 @@ async function getProposalWithComments(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Send the comments associated with the proposal in the response
     reply.send(proposal);
   } catch (error) {
     // If an error occurs, send a 500 status code along with the error message
-    reply.status(500).send(error);
+    const errorResponse = {
+      success: false,
+      error: error
+    };
+    return reply.status(500).send(errorResponse);
   }
 }
 

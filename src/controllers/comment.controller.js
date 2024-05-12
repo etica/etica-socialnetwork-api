@@ -22,7 +22,11 @@ async function createCommentOnProposal(request, reply) {
     let proposal = await Proposal.findOne({ hash: proposalHash });
     
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     var newcomment = request.body.comment;
@@ -86,7 +90,11 @@ async function createCommentOnProposal(request, reply) {
     reply.send(comment);
   } catch (error) {
     // If an error occurs, send a 500 status code along with the error message
-    reply.status(500).send(error);
+    const errorResponse = {
+      success: false,
+      error: error
+    };
+    return reply.status(500).send(errorResponse);
   }
 }
 
@@ -102,7 +110,11 @@ async function getProposalTopComments(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Extract comments from the proposal
@@ -129,7 +141,11 @@ async function getProposalComments(request, reply) {
 
     // If the proposal doesn't exist, return a 404 status
     if (!proposal) {
-      return reply.status(404).send("Proposal not found");
+      const errorResponse = {
+        success: false,
+        error: ["Proposal not found"]
+      };
+      return reply.status(404).send(errorResponse);
     }
 
     // Extract comments from the proposal
@@ -142,7 +158,11 @@ async function getProposalComments(request, reply) {
     }
     
     // Send the comments associated with the proposal in the response
-    reply.send(proposalComments);
+    const successResponse = {
+      success: true,
+      result: proposalComments
+    };
+    return reply.send(successResponse);
   } catch (error) {
     // If an error occurs, send a 500 status code along with the error message
     reply.status(500).send(error);
