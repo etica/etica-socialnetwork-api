@@ -18,9 +18,11 @@ const ProposalSchema = new mongoose.Schema({
     unique: true,
     index: true
   },
-  index: {
+  proposalindex: {
     type: Number,
-    required: true
+    required: true,
+    unique: true,
+    index: true
   },
   diseasehash: {
     type: String,
@@ -45,7 +47,7 @@ const ProposalSchema = new mongoose.Schema({
   }, // ipfs or other content hash
   raw_release_hash: {
     type: String,
-    required: true
+    required: false
   },
   freefield: {
     type: String,
