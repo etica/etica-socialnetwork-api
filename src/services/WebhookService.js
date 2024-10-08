@@ -8,6 +8,8 @@ class WebhookService {
     console.log('proposal.starttime is', proposal.starttime);
     console.log('typeof proposal.starttime is', typeof proposal.starttime);
 
+
+    /*
     try {
       const payload = {
         content: `New Etica Proposal: ${proposal.title}`,
@@ -68,7 +70,63 @@ class WebhookService {
       console.log('Discord webhook notification sent successfully');
     } catch (error) {
       console.error('Error sending Discord webhook notification:', error);
+    } */
+
+
+    try {
+      const payload = {
+        content: `New Etica Proposal: ${proposal.title.substring(0, 100)}...`, // Limit title length
+        embeds: [{
+          title: proposal.title.substring(0, 256), // Discord title limit is 256 characters
+          description: proposal.description.substring(0, 4096), // Discord description limit is 4096 characters
+          color: 3447003,
+          fields: [
+            {
+              name: "Proposal Hash",
+              value: proposal.hash,
+              inline: true
+            },
+            {
+              name: "Disease",
+              value: proposal.diseasename || "N/A",
+              inline: false
+            },
+            {
+              name: "Chunk",
+              value: proposal.chunkname || "N/A",
+              inline: true
+            },
+            {
+              name: "Proposer",
+              value: proposal.proposer,
+              inline: false
+            },
+            {
+              name: "IPFS Hash",
+              value: proposal.raw_release_hash,
+              inline: false
+            },
+            {
+              name: "Approval Threshold",
+              value: proposal.approvalthreshold.toString(),
+              inline: false
+            }
+          ],
+          url: `https://eticascan.org/proposal/${proposal.hash}` // Use proposal hash instead of undefined
+        }]
+      };
+  
+      console.log('Sending new proposal webhook with payload:', JSON.stringify(payload));
+  
+      const response = await axios.post(webhookUrl, payload);
+      console.log('Discord webhook notification sent successfully');
+      return response;
+    } catch (error) {
+      console.error('Error sending Discord webhook notification:', error.response ? error.response.data : error.message);
+      throw error;
     }
+
+
   }
 }
 
