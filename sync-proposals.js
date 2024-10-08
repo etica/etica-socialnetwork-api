@@ -149,7 +149,7 @@ async createProposal(_proposal) {
             }
             
             if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
-              cconsole.log('--------- in process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
+              console.log('--------- in process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
               const proposaldata = await contract.methods.propsdatas(proposal.hash).call();
               newproposal.approvalthreshold = proposaldata.approvalthreshold;
               newproposal.starttime = proposaldata.starttime;
