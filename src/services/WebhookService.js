@@ -83,6 +83,8 @@ class WebhookService {
       console.error('Error sending Discord webhook notification:', error);
     } */
 
+      console.log('proposal.periodid is:', proposal.periodid);
+
 
     try {
       const payload = {
@@ -134,7 +136,7 @@ class WebhookService {
             },
             {
               name: "Period",
-              value: proposal.periodid.toString(),
+              value: proposal.periodid,
               inline: false
             }
           ],
