@@ -73,7 +73,7 @@ class WebhookService {
       console.error('Error sending Discord webhook notification:', error);
     } */
 
-      console.log(' moment(proposal.endtime).format("X") : ',  moment(proposal.endtime).format("X"));
+      console.log(' moment(proposal.endtime).format("X") : ',  moment.unix(proposal.endtime).format("MMM Do YYYY hh:mm"));
 
 
     try {
@@ -111,12 +111,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: moment(proposal.starttime).format("X"),
+              value: moment.unix(proposal.starttime).format("MMM Do YYYY hh:mm"),
               inline: false
             },
             {
               name: "Voting Ends",
-              value: moment(proposal.endtime).format("X"),
+              value: moment.unix(proposal.endtime).format("MMM Do YYYY hh:mm"),
               inline: false
             },
             {
