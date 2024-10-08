@@ -1,6 +1,7 @@
 // Webhooks.js
 const axios = require('axios');
 const { Web3 } = require('web3');
+const web3 = new Web3();
 
 class WebhookService {
   async discord_new_proposal(proposal, webhookUrl) {
@@ -40,12 +41,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: new Date((Web3.utils.toBN(proposal.starttime).mul(Web3.utils.toBN('1000'))).toString()).toUTCString(),
+              value: new Date((web3.utils.toBN(proposal.starttime).mul(web3.utils.toBN('1000'))).toString()).toUTCString(),
               inline: false
             },
             {
               name: "Voting Ends",
-              value: new Date((Web3.utils.toBN(proposal.endtime).mul(Web3.utils.toBN('1000'))).toString()).toUTCString(),
+              value: new Date((web3.utils.toBN(proposal.endtime).mul(web3.utils.toBN('1000'))).toString()).toUTCString(),
               inline: false
             },
             {
