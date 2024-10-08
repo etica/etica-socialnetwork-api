@@ -18,6 +18,10 @@ const ProposalSchema = new mongoose.Schema({
     unique: true,
     index: true
   },
+  periodid: {
+    type: Number,
+    required: false
+  },
   proposalindex: {
     type: Number,
     required: true,
