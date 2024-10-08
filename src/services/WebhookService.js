@@ -88,7 +88,7 @@ class WebhookService {
 
     try {
       const payload = {
-        content: `_NEW RESEARCH PROPOSAL_ `,
+      content: `_NEW RESEARCH PROPOSAL_ _[votes deadline: ${moment.unix(endTimeNumber).format("MMM Do YYYY hh:mm")}]_`,
         embeds: [{
           title: proposal.title.substring(0, 256), // Discord title limit is 256 characters
           description: proposal.description.substring(0, 1000), // Discord description limit is 4096 characters
