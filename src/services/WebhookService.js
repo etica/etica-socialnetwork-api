@@ -2,7 +2,7 @@
 const axios = require('axios');
 
 class WebhookService {
-  static async discord_new_proposal(proposal, webhookUrl) {
+  async discord_new_proposal(proposal, webhookUrl) {
     console.log('sending new discord webhook proposal:', proposal);
     try {
       const payload = {
