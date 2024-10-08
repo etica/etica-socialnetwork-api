@@ -4,6 +4,8 @@ const web3validator = require('web3-validator');
 const { abi } = require('./EticaRelease.json');
 const mongoose = require("mongoose");
 
+const webhookService = require('./src/services/WebhookService');
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -129,6 +131,26 @@ async createProposal(_proposal) {
         const proposal = new Proposal(newproposal);
         const result = await proposal.save();
         console.log('created newproposal result is: ',result);
+
+        console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED', process.env.DISCORD_WEBHOOKS_ACTIVATED);
+            if(process.env.DISCORD_WEBHOOKS_ACTIVATED){
+              console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED PASSED');
+            }
+
+            console.log('process.env.DISCORD_WEBHOOK_NEW_PROPOSAL:', process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
+            if(process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
+              console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL PASSED');
+            }
+            
+            if(process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
+              cconsole.log('--------- in process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
+              const proposaldata = await contract.methods.propsdatas(proposal.hash).call();
+              newproposal.approvalthreshold = proposaldata.approvalthreshold;
+              newproposal.starttime = proposaldata.starttime;
+              newproposal.endtime = proposaldata.endtime;
+              this.webhookService.discord_new_proposal(newproposal, process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
+            }
+
         return result;
 
       }
