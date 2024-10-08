@@ -32,6 +32,8 @@ class ProposalsSync {
 
 async checkNewProposals(){
 
+  console.log('inside checkNewProposals');
+
     // get last proposalindex
     // const lastProposal = await Proposal.findOne({}).sort({ proposalindex: -1 }); warning
     const lastProposal = await Proposal.findOne({}).sort({ "proposalindex": -1 }); // warning rewrite query to get list in proposalindex decreassing order
@@ -41,10 +43,14 @@ async checkNewProposals(){
          lastSavedId = lastProposal.proposalindex;
     }
 
+    console.log('lastSavedId is: ', lastSavedId);
+
 
     const LastProposalIndexFromBlockchain = await this.getLastProposalIndexFromBlockchain();
 
     let proposalsdelay = LastProposalIndexFromBlockchain - lastSavedId;
+
+    console.log('proposalsdelay is:', proposalsdelay);
 
     if(proposalsdelay > 0){
 
