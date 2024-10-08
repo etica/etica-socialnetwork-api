@@ -32,8 +32,6 @@ class ProposalsSync {
 
 async checkNewProposals(){
 
-  console.log('inside checkNewProposals');
-
     // get last proposalindex
     // const lastProposal = await Proposal.findOne({}).sort({ proposalindex: -1 }); warning
     const lastProposal = await Proposal.findOne({}).sort({ "proposalindex": -1 }); // warning rewrite query to get list in proposalindex decreassing order
@@ -43,14 +41,10 @@ async checkNewProposals(){
          lastSavedId = lastProposal.proposalindex;
     }
 
-    console.log('lastSavedId is: ', lastSavedId);
-
 
     const LastProposalIndexFromBlockchain = await this.getLastProposalIndexFromBlockchain();
 
     let proposalsdelay = LastProposalIndexFromBlockchain - lastSavedId;
-
-    console.log('proposalsdelay is:', proposalsdelay);
 
     if(proposalsdelay > 0){
 
@@ -80,7 +74,6 @@ async checkNewProposals(){
 
 
 }
-
 
 
 async getLastProposalIndexFromBlockchain() {
@@ -137,20 +130,8 @@ async createProposal(_proposal) {
         
         const proposal = new Proposal(newproposal);
         const result = await proposal.save();
-        console.log('created newproposal result is: ',result);
-
-        console.log('process.env.DISCORD_WEBHOOK_ACTIVATED', process.env.DISCORD_WEBHOOK_ACTIVATED);
-            if(process.env.DISCORD_WEBHOOK_ACTIVATED){
-              console.log('process.env.DISCORD_WEBHOOK_ACTIVATED PASSED');
-            }
-
-            console.log('process.env.DISCORD_WEBHOOK_NEW_PROPOSAL:', process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
-            if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
-              console.log('process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL PASSED');
-            }
             
             if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
-              console.log('--------- in process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
               const webhookService = new WebhookService();
               const proposaldata = await contract.methods.propsdatas(proposal.hash).call();
               newproposal.approvalthreshold = proposaldata.approvalthreshold;
