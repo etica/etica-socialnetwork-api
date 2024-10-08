@@ -43,12 +43,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: `${proposal.starttime}`,
+              value: `datehere starttime`,
               inline: false
             },
             {
               name: "Voting Ends",
-              value: `${proposal.endtime}`,
+              value: `datehere endtime`,
               inline: false
             },
             {
