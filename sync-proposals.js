@@ -4,9 +4,10 @@ const web3validator = require('web3-validator');
 const { abi } = require('./EticaRelease.json');
 const mongoose = require("mongoose");
 
-const webhookService = require('./src/services/WebhookService');
+const WebhookService = require('./src/services/WebhookService');
 
 const dotenv = require('dotenv');
+const WebhookService = require("./src/services/WebhookService");
 dotenv.config();
 
 const CONTRACTADDRESS = process.env.CONTRACT_ADDRESS;
@@ -150,11 +151,12 @@ async createProposal(_proposal) {
             
             if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
               console.log('--------- in process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
+              const webhookService = new WebhookService();
               const proposaldata = await contract.methods.propsdatas(proposal.hash).call();
               newproposal.approvalthreshold = proposaldata.approvalthreshold;
               newproposal.starttime = proposaldata.starttime;
               newproposal.endtime = proposaldata.endtime;
-              this.webhookService.discord_new_proposal(newproposal, process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
+              webhookService.discord_new_proposal(newproposal, process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
             }
 
         return result;
