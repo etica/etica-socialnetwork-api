@@ -131,7 +131,7 @@ class WebhookService {
             },
             {
               name: "Approval Threshold",
-              value: `${(proposal.approvalthreshold / 100).toFixed(2)}%`,
+              value: `${Number((proposal.approvalthreshold * 100n) / 10000n) / 100}%`,
               inline: false
             },
             {
