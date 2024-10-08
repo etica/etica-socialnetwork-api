@@ -9,6 +9,16 @@ class WebhookService {
     console.log('proposal.starttime is', proposal.starttime);
     console.log('typeof proposal.starttime is', typeof proposal.starttime);
 
+    const startTimeNumber = Number(proposal.starttime);
+    const endTimeNumber = Number(proposal.endtime);
+
+    console.log('startTimeNumber', startTimeNumber);
+    console.log('endTimeNumber', endTimeNumber);
+
+    console.log(' moment.format() : ', moment().format());
+    console.log(' moment(startTime).format("X") : ', moment.unix(startTimeNumber).format("MMM Do YYYY hh:mm"));
+    console.log(' moment(endTime).format("X") : ', moment.unix(endTimeNumber).format("MMM Do YYYY hh:mm"));
+
 
     /*
     try {
