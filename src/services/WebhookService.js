@@ -53,7 +53,7 @@ class WebhookService {
             },
             {
                 name: "Approval Threshold",
-                value: proposal.approvalthreshold,
+                value: proposal.approvalthreshold.toString(),
                 inline: false
             }
             
