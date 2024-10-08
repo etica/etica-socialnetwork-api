@@ -138,18 +138,18 @@ async createProposal(_proposal) {
         const result = await proposal.save();
         console.log('created newproposal result is: ',result);
 
-        console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED', process.env.DISCORD_WEBHOOKS_ACTIVATED);
-            if(process.env.DISCORD_WEBHOOKS_ACTIVATED){
-              console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED PASSED');
+        console.log('process.env.DISCORD_WEBHOOK_ACTIVATED', process.env.DISCORD_WEBHOOK_ACTIVATED);
+            if(process.env.DISCORD_WEBHOOK_ACTIVATED){
+              console.log('process.env.DISCORD_WEBHOOK_ACTIVATED PASSED');
             }
 
             console.log('process.env.DISCORD_WEBHOOK_NEW_PROPOSAL:', process.env.DISCORD_WEBHOOK_NEW_PROPOSAL);
-            if(process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
-              console.log('process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL PASSED');
+            if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
+              console.log('process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL PASSED');
             }
             
-            if(process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
-              cconsole.log('--------- in process.env.DISCORD_WEBHOOKS_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
+            if(process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL){
+              cconsole.log('--------- in process.env.DISCORD_WEBHOOK_ACTIVATED && process.env.DISCORD_WEBHOOK_NEW_PROPOSAL condition loop ----------');
               const proposaldata = await contract.methods.propsdatas(proposal.hash).call();
               newproposal.approvalthreshold = proposaldata.approvalthreshold;
               newproposal.starttime = proposaldata.starttime;
