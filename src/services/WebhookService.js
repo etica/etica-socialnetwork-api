@@ -1,7 +1,7 @@
 // Webhooks.js
 const axios = require('axios');
 const { DateTime } = require("luxon");
-const moment = require("moment");
+var moment = require("moment");
 
 class WebhookService {
   async discord_new_proposal(proposal, webhookUrl) {
@@ -73,6 +73,7 @@ class WebhookService {
       console.error('Error sending Discord webhook notification:', error);
     } */
 
+      console.log(' moment.format() : ', moment.format());
       console.log(' moment(proposal.endtime).format("X") : ',  moment.unix(proposal.endtime).format("MMM Do YYYY hh:mm"));
 
 
