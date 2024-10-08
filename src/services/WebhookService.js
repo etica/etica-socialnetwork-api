@@ -43,12 +43,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: `${proposal.starttime.toString()}`,
+              value: `${proposal.starttime}`,
               inline: false
             },
             {
               name: "Voting Ends",
-              value: `${proposal.endtime.toString()}`,
+              value: `${proposal.endtime}`,
               inline: false
             },
             {
