@@ -73,7 +73,7 @@ class WebhookService {
       console.error('Error sending Discord webhook notification:', error);
     } */
 
-      console.log(' moment.format() : ', moment.format());
+      console.log(' moment.format() : ', moment().format());
       console.log(' moment(proposal.endtime).format("X") : ',  moment.unix(proposal.endtime).format("MMM Do YYYY hh:mm"));
 
 
