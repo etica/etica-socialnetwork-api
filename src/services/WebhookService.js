@@ -75,10 +75,10 @@ class WebhookService {
 
     try {
       const payload = {
-        content: `New Etica Proposal: ${proposal.title.substring(0, 100)}...`, // Limit title length
+        content: `NEW PROPOSAL: ${proposal.title.substring(0, 100)}...`, // Limit title length
         embeds: [{
           title: proposal.title.substring(0, 256), // Discord title limit is 256 characters
-          description: proposal.description.substring(0, 4096), // Discord description limit is 4096 characters
+          description: proposal.description.substring(0, 1000), // Discord description limit is 4096 characters
           color: 3447003,
           fields: [
             {
@@ -107,8 +107,23 @@ class WebhookService {
               inline: false
             },
             {
+              name: "Voting Starts",
+              value: DateTime.fromSeconds(Number(proposal.starttime)).toUTC().toFormat("yyyy-MM-dd HH:mm:ss 'UTC'"),
+              inline: false
+            },
+            {
+              name: "Voting Ends",
+              value: DateTime.fromSeconds(Number(proposal.endtime)).toUTC().toFormat("yyyy-MM-dd HH:mm:ss 'UTC'"),
+              inline: false
+            },
+            {
               name: "Approval Threshold",
               value: proposal.approvalthreshold.toString(),
+              inline: false
+            },
+            {
+              name: "Period",
+              value: proposal.periodid.toString(),
               inline: false
             }
           ],
