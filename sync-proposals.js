@@ -4,11 +4,10 @@ const web3validator = require('web3-validator');
 const { abi } = require('./EticaRelease.json');
 const mongoose = require("mongoose");
 
-const WebhookService = require('./src/services/WebhookService');
-
 const dotenv = require('dotenv');
-const WebhookService = require("./src/services/WebhookService");
 dotenv.config();
+
+const WebhookService = require("./src/services/WebhookService");
 
 const CONTRACTADDRESS = process.env.CONTRACT_ADDRESS;
 const MAINRPC = process.env.MAIN_RPC;
