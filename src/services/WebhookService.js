@@ -131,7 +131,7 @@ class WebhookService {
             },
             {
               name: "Approval Threshold",
-              value: proposal.approvalthreshold.toString(),
+              value: `${(proposal.approvalthreshold / 100).toFixed(2)}%`,
               inline: false
             },
             {
@@ -140,7 +140,7 @@ class WebhookService {
               inline: false
             }
           ],
-          url: `https://eticascan.org/proposal/${proposal.hash}` // Use proposal hash instead of undefined
+          url: `https://etica.io/app/main/proposal?proposalhash=${proposal.hash}` // Use proposal hash instead of undefined
         }]
       };
   
