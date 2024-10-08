@@ -43,12 +43,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: `${proposal.starttime.toString()} (${DateTime.fromMillis(parseInt(proposal.starttime.toString()) * 1000).toUTC().toFormat("yyyy-MM-dd HH:mm:ss 'UTC'")})`,
+              value: `${proposal.starttime.toString()}`,
               inline: false
             },
             {
               name: "Voting Ends",
-              value: `${proposal.endtime.toString()} (${DateTime.fromMillis(parseInt(proposal.endtime.toString()) * 1000).toUTC().toFormat("yyyy-MM-dd HH:mm:ss 'UTC'")})`,
+              value: `${proposal.endtime.toString()}`,
               inline: false
             },
             {
