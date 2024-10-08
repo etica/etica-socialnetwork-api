@@ -3,9 +3,7 @@ const axios = require('axios');
 
 class WebhookService {
   static async discord_new_proposal(proposal, webhookUrl) {
-    const data = proposal.data;
     console.log('sending new discord webhook proposal:', proposal);
-    console.log('sending new discord webhook data:', data);
     try {
       const payload = {
         content: `New Etica Proposal: ${proposal.title}`,
@@ -41,17 +39,17 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: new Date(data.starttime * 1000).toUTCString(),
+              value: new Date(proposal.starttime * 1000).toUTCString(),
               inline: false
             },
             {
               name: "Voting Ends",
-              value: new Date(data.endtime * 1000).toUTCString(),
+              value: new Date(proposal.endtime * 1000).toUTCString(),
               inline: false
             },
             {
                 name: "Approval Threshold",
-                value: data.approvalthreshold,
+                value: proposal.approvalthreshold,
                 inline: false
             }
             
