@@ -122,7 +122,7 @@ async createProposal(_proposal) {
         newproposal.hash = _proposal[1];
         newproposal.proposalindex = Number(_proposal[0]);
         newproposal.diseasehash = _proposal[2];
-        newproposal.periodid = _proposal[3];
+        newproposal.periodid = Number(_proposal[3]);
         newproposal.diseasename = disease[1];
   
         newproposal.chunkid = Number(chunkid);
