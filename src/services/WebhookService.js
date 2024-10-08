@@ -5,6 +5,9 @@ const { DateTime } = require("luxon");
 class WebhookService {
   async discord_new_proposal(proposal, webhookUrl) {
     console.log('sending new discord webhook proposal:', proposal);
+    console.log('proposal.starttime is', proposal.starttime);
+    console.log('typeof proposal.starttime is', typeof proposal.starttime);
+
     try {
       const payload = {
         content: `New Etica Proposal: ${proposal.title}`,
