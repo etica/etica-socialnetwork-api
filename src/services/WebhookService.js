@@ -40,12 +40,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: new Date((Web3.toBN(proposal.starttime).mul(Web3.toBN('1000'))).toString()).toUTCString(),
+              value: new Date((Web3.utils.toBN(proposal.starttime).mul(Web3.utils.toBN('1000'))).toString()).toUTCString(),
               inline: false
             },
             {
               name: "Voting Ends",
-              value: new Date((Web3.toBN(proposal.endtime).mul(Web3.toBN('1000'))).toString()).toUTCString(),
+              value: new Date((Web3.utils.toBN(proposal.endtime).mul(Web3.utils.toBN('1000'))).toString()).toUTCString(),
               inline: false
             },
             {
