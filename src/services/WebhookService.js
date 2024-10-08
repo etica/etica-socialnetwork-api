@@ -41,12 +41,12 @@ class WebhookService {
             },
             {
               name: "Voting Starts",
-              value: new Date(BigInt(proposal.starttime) * 1000n).toUTCString(),
+              value: new Date(Number(proposal.starttime) * 1000).toUTCString(),
               inline: false
             },
             {
               name: "Voting Ends",
-              value: new Date(BigInt(proposal.endtime) * 1000n).toUTCString(),
+              value: new Date(Number(proposal.endtime) * 1000).toUTCString(),
               inline: false
             },
             {
